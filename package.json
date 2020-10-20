@@ -36,7 +36,6 @@
     "homepage": "https://github.com/throw-out-error/logger#README",
     "dependencies": {
         "moment": "^2.29.1",
-        "ramda": "^0.27.1",
         "ts-log": "^2.2.3"
     },
     "publishConfig": {

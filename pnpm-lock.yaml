@@ -1,6 +1,5 @@
 dependencies:
   moment: 2.29.1
-  ramda: 0.27.1
   ts-log: 2.2.3
 devDependencies:
   '@types/jest': 26.0.14
@@ -3519,10 +3518,6 @@ packages:
       node: '>=0.6'
     resolution:
       integrity: sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
-  /ramda/0.27.1:
-    dev: false
-    resolution:
-      integrity: sha512-PgIdVpn5y5Yns8vqb8FzBUEYn98V3xcPgawAkkgj0YJ0qDsnHCiNmZYfOGMgOvoB0eWFLpYbhxUR3mxfDIMvpw==
   /react-is/16.13.1:
     dev: true
     resolution:
@@ -4536,6 +4531,5 @@ specifiers:
   jest: ^26.5.3
   moment: ^2.29.1
   prettier: ^2.1.2
-  ramda: ^0.27.1
   ts-log: ^2.2.3
   typescript: ^4.0.3
