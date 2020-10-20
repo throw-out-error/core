@@ -3,8 +3,8 @@
     "private": false,
     "version": "1.0.0",
     "description": "Loggers and more",
-    "main": "index.js",
-    "types": "index.d.ts",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "scripts": {
         "prepublishOnly": "pnpm run build",
         "build": "tsc",

@@ -9,5 +9,3 @@ export * from "./PrefixLogger";
 export * from "./ProcessLogger";
 export * from "./PostfixLogger";
 export * from "./TsLogLogger";
-
-export * from "./Feature/DefaultLoggerFeature";

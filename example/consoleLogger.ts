@@ -1,5 +1,5 @@
-import { ConsoleLogger } from '../src';
+import { ConsoleLogger } from "../src";
 
 const logger = new ConsoleLogger(console);
-logger.info('Hallo', 'World');
-logger.info('Bye %s', 'World');
+logger.info("Hallo", "World");
+logger.info("Bye %s", "World");
