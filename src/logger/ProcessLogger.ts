@@ -12,8 +12,9 @@ import Process = NodeJS.Process;
 export class ProcessLogger
     extends AbstractLogLevelLogger
     implements LoggerInterface {
-    constructor(private readonly process: Process, private eol = os.EOL) {
+    constructor(private readonly processImpl?: Process, private eol = os.EOL) {
         super();
+        if (!this.processImpl) this.processImpl = processImpl;
     }
 
     public log(
@@ -22,12 +23,12 @@ export class ProcessLogger
         ...optionalParams: unknown[]
     ): void {
         if (type === LogLevel.error) {
-            this.process.stderr.write(
+            this.processImpl.stderr.write(
                 util.format(message, ...optionalParams) + this.eol
             );
             return;
         }
-        this.process.stdout.write(
+        this.processImpl.stdout.write(
             util.format(message, ...optionalParams) + this.eol
         );
     }

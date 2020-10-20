@@ -4,9 +4,9 @@ exports.ConsoleLogger = void 0;
 const TsLogLogger_1 = require("./TsLogLogger");
 class ConsoleLogger extends TsLogLogger_1.TsLogLogger {
     /* istanbul ignore next */
-    constructor(console) {
-        super(console);
-        this.console = console;
+    constructor(consoleImpl) {
+        super(consoleImpl ?? console);
+        this.consoleImpl = consoleImpl;
     }
 }
 exports.ConsoleLogger = ConsoleLogger;

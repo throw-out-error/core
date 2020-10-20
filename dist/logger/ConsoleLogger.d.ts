@@ -2,6 +2,6 @@
 import { LoggerInterface } from "./LoggerInterface";
 import { TsLogLogger } from "./TsLogLogger";
 export declare class ConsoleLogger extends TsLogLogger implements LoggerInterface {
-    readonly console: Console;
-    constructor(console: Console);
+    readonly consoleImpl?: Console;
+    constructor(consoleImpl?: Console);
 }

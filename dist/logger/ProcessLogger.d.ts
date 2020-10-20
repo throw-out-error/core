@@ -8,8 +8,8 @@ import Process = NodeJS.Process;
  * https://nodejs.org/api/util.html#util_util_format_format_args
  */
 export declare class ProcessLogger extends AbstractLogLevelLogger implements LoggerInterface {
-    private readonly process;
+    private readonly processImpl?;
     private eol;
-    constructor(process: Process, eol?: string);
+    constructor(processImpl?: Process, eol?: string);
     log(type: LogLevel, message?: unknown, ...optionalParams: unknown[]): void;
 }

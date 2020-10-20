@@ -30,17 +30,19 @@ const util = __importStar(require("util"));
  * https://nodejs.org/api/util.html#util_util_format_format_args
  */
 class ProcessLogger extends AbstractLogLevelLogger_1.AbstractLogLevelLogger {
-    constructor(process, eol = os.EOL) {
+    constructor(processImpl, eol = os.EOL) {
         super();
-        this.process = process;
+        this.processImpl = processImpl;
         this.eol = eol;
+        if (!this.processImpl)
+            this.processImpl = processImpl;
     }
     log(type, message, ...optionalParams) {
         if (type === LoggerInterface_1.LogLevel.error) {
-            this.process.stderr.write(util.format(message, ...optionalParams) + this.eol);
+            this.processImpl.stderr.write(util.format(message, ...optionalParams) + this.eol);
             return;
         }
-        this.process.stdout.write(util.format(message, ...optionalParams) + this.eol);
+        this.processImpl.stdout.write(util.format(message, ...optionalParams) + this.eol);
     }
 }
 exports.ProcessLogger = ProcessLogger;
