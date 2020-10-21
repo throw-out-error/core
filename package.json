@@ -34,12 +34,12 @@
         "url": "https://github.com/throw-out-error/logger/issues"
     },
     "homepage": "https://github.com/throw-out-error/logger#README",
+    "publishConfig": {
+        "access": "public"
+    },
     "dependencies": {
         "moment": "^2.29.1",
         "ts-log": "^2.2.3"
-    },
-    "publishConfig": {
-        "access": "public"
     },
     "devDependencies": {
         "@types/jest": "^26.0.14",
