@@ -19,7 +19,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/throw-out-error/logger.git"
+        "url": "https://github.com/throw-out-error/core.git"
     },
     "keywords": [
         "typescript",
@@ -31,9 +31,9 @@
     "author": "Theo Paris",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/throw-out-error/logger/issues"
+        "url": "https://github.com/throw-out-error/core/issues"
     },
-    "homepage": "https://github.com/throw-out-error/logger#README",
+    "homepage": "https://github.com/throw-out-error/core#README",
     "publishConfig": {
         "access": "public"
     },
