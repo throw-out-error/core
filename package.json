@@ -1,7 +1,7 @@
 {
     "name": "@toes/core",
     "private": false,
-    "version": "0.0.2-dev",
+    "version": "0.0.3-dev",
     "description": "Loggers and more",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
