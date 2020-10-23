@@ -8,10 +8,10 @@ export const asyncTimeout = (ms: number): Promise<void> => {
 
 export async function readFile(
     path: string,
-    defaultContent?: Buffer
-): Promise<Buffer> {
+    defaultContent?: string
+): Promise<string> {
     return new Promise((res, rej) =>
-        rF(path, (err, data) =>
+        rF(path, { encoding: "utf-8" }, (err, data) =>
             !err
                 ? res(data)
                 : err.code === "ENOENT" && defaultContent !== undefined

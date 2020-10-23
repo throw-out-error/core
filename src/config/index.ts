@@ -103,14 +103,10 @@ export const loadConfig = async <T>(
     defaultConfig?: T
 ): Promise<ConfigValueSource<T>> => {
     const config = JSON.parse(
-        (
-            await readFile(
-                file,
-                defaultConfig
-                    ? Buffer.from(JSON.stringify(defaultConfig))
-                    : null
-            )
-        ).toString("utf-8")
+        await readFile(
+            file,
+            defaultConfig ? JSON.stringify(defaultConfig) : null
+        )
     );
     return ConfigValueSources.obj(config);
 };
