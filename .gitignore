@@ -2,6 +2,7 @@
 out
 build
 node_modules
+dist
 
 # Logs
 *.log*

@@ -6,17 +6,14 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
-        "dist",
-        "README.md"
+        "dist"
     ],
     "scripts": {
         "prepublishOnly": "pnpm run lint && pnpm run build",
         "build": "tsc",
         "watch": "tsc --watch",
         "test": "npm-run-all clean-build build lint unit-test copy-past-detection",
-        "clean-build": "git clean -fdx --exclude node_modules",
         "lint": "eslint --fix --quiet src/**/*",
-        "security-audit": "pnpm run audit",
         "unit-test": "jest",
         "unit-test-update": "jest -u",
         "copy-past-detection": "jscpd"
@@ -42,7 +39,9 @@
         "access": "public"
     },
     "dependencies": {
-        "moment": "^2.29.1",
+        "date-fns": "^2.16.1",
+        "dotenv": "^8.2.0",
+        "rotating-file-stream": "^2.1.3",
         "ts-log": "^2.2.3"
     },
     "devDependencies": {
