@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { readFile } from "../util";
 
 export type ConfigFor<T> = {
     [k in keyof T]: ConfigValueSource<T[k]> | T[k] | ConfigFor<T[k]>;
@@ -99,8 +99,18 @@ export const ConfigValueSources: ConfigValueSources = {
  * @param file File path
  */
 export const loadConfig = async <T>(
-    file: string
+    file: string,
+    defaultConfig?: T
 ): Promise<ConfigValueSource<T>> => {
-    const config = JSON.parse(readFileSync(file, { encoding: "utf-8" }));
+    const config = JSON.parse(
+        (
+            await readFile(
+                file,
+                defaultConfig
+                    ? Buffer.from(JSON.stringify(defaultConfig))
+                    : null
+            )
+        ).toString("utf-8")
+    );
     return ConfigValueSources.obj(config);
 };
