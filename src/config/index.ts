@@ -1,3 +1,5 @@
+import { readFileSync } from "fs";
+
 export type ConfigFor<T> = {
     [k in keyof T]: ConfigValueSource<T[k]> | T[k] | ConfigFor<T[k]>;
 };
@@ -90,4 +92,15 @@ export const ConfigValueSources: ConfigValueSources = {
 
         return ConfigValueSources.lit(result as Promise<T>);
     },
+};
+
+/**
+ * Loads a config object from a json file.
+ * @param file File path
+ */
+export const loadConfig = async <T>(
+    file: string
+): Promise<ConfigValueSource<T>> => {
+    const config = JSON.parse(readFileSync(file, { encoding: "utf-8" }));
+    return ConfigValueSources.obj(config);
 };
