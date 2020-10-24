@@ -63,7 +63,9 @@ export const ConfigValueSources: ConfigValueSources = {
     obj: <T>(config: ConfigFor<T>, orEnv?: boolean) => {
         const configAny = config as { [k: string]: ConfigValueSource<unknown> };
         const getValue = (src?: unknown): Promise<unknown> =>
-            src instanceof Function
+            !src
+                ? Promise.resolve(undefined)
+                : src instanceof Function
                 ? src()
                 : Object.getPrototypeOf(src) === Object.getPrototypeOf({})
                 ? ConfigValueSources.obj(src)()
@@ -96,17 +98,16 @@ export const ConfigValueSources: ConfigValueSources = {
 
 /**
  * Loads a config object from a json file.
- * @param file File path
+ * @param path File path
  */
 export const loadConfig = async <T>(
-    file: string,
+    path: string,
     defaultConfig?: T
-): Promise<ConfigValueSource<T>> => {
-    const config = JSON.parse(
-        await readFile(
-            file,
-            defaultConfig ? JSON.stringify(defaultConfig) : null
-        )
-    );
-    return ConfigValueSources.obj(config);
+): Promise<T> => {
+    const config = await readFile<T>({
+        path,
+        defaultContent: defaultConfig,
+        parse: true,
+    });
+    return await ConfigValueSources.obj<T>(config)();
 };

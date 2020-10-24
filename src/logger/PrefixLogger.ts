@@ -23,6 +23,6 @@ export class PrefixLogger
         message?: unknown,
         ...optionalParams: unknown[]
     ) {
-        this.logger.log(level, this.prefix + message, ...optionalParams);
+        this.logger.log(level, `${this.prefix} ${message}`, ...optionalParams);
     }
 }

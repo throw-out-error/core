@@ -1,5 +1,7 @@
 # @toes/core
 
+## The Core of The Toes
+
 This is our core typescript package for throw-out-error that currently includes a logger.
 
 ## WIP
