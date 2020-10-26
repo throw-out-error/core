@@ -1,4 +1,6 @@
 import { readFile } from "../util";
+import { validateOrReject } from "class-validator";
+import Keyv from "keyv";
 
 export type ConfigFor<T> = {
     [k in keyof T]: ConfigValueSource<T[k]> | T[k] | ConfigFor<T[k]>;
@@ -98,16 +100,25 @@ export const ConfigValueSources: ConfigValueSources = {
 
 /**
  * Loads a config object from a json file.
- * @param path File path
+ * @param storageBackend Storage (keyv) backend
+ * Valid backends include sqlite, postgres, etc.
+ * If you want to load from a file use {@link loadConfigFile}
+ * See https://www.npmjs.com/package/keyv for more information.
  */
 export const loadConfig = async <T>(
     path: string,
-    defaultConfig?: T
+    opts: {
+        defaultConfig?: T;
+        validate?: boolean;
+    } = {}
 ): Promise<T> => {
-    const config = await readFile<T>({
+    const config = await readFile({
         path,
-        defaultContent: defaultConfig,
+        defaultContent: opts.defaultConfig,
         parse: true,
     });
+
+    if (opts.validate) await validateOrReject(config);
+
     return await ConfigValueSources.obj<T>(config)();
 };
