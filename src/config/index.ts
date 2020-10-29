@@ -132,6 +132,11 @@ export function loadConfiguration<T = DefaultConfigType>(opts: {
     let config: DefaultConfigType = (loadConfig<
         T
     >() as unknown) as DefaultConfigType;
+    const envId = opts.env ?? process.env.ENVIRONMENT_ID;
+    if (envId)
+        config = yaml.parse(
+            fs.readFileSync(`config/${envId}.yml`, { encoding: "utf-8" })
+        );
     // TODO: nested default values instead of defaultting whole config object
     if (opts.defaultConfig)
         config =
@@ -141,16 +146,6 @@ export function loadConfiguration<T = DefaultConfigType>(opts: {
                   )
                 : (opts.defaultConfig as DefaultConfigType);
 
-    const environments: Record<string, unknown> = (config.environments ??
-        {}) as Record<string, unknown>;
-    const envId = opts.env ?? process.env.ENVIRONMENT_ID;
-    const environmentTypes: Record<string, string> = (environments.static ??
-        Object.keys(config)) as Record<string, string>;
-    const environmentType: string = Object.values(environmentTypes).includes(
-        envId
-    )
-        ? envId
-        : (environments.default as string);
     // config = swapVariables(environmentType, envId, config);
     return config as T;
 }
