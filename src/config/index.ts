@@ -1,124 +1,144 @@
-import { readFile } from "../util";
-import { validateOrReject } from "class-validator";
-import Keyv from "keyv";
+import fs from "fs";
+import yaml from "yaml";
+import { getAt, isPlainObject } from "../util";
 
-export type ConfigFor<T> = {
-    [k in keyof T]: ConfigValueSource<T[k]> | T[k] | ConfigFor<T[k]>;
-};
+const timestamp = new Date()
+    .toISOString()
+    .slice(-24)
+    .replace(/\D/g, "")
+    .slice(0, 14);
+let multiFile = false;
 
-export type ConfigFetcher<T> = () => Promise<T>;
+export type DefaultConfigType = Record<string, unknown>;
 
-export type ConfigValueSource<T> = ConfigFetcher<T> & {
-    map: <S>(f: (t: T) => S | Promise<S>) => ConfigValueSource<S>;
-    flatMap: <S>(f: (t: T) => ConfigValueSource<S>) => ConfigValueSource<S>;
-};
-
-const configValueSource: <T>(cf: ConfigFetcher<T>) => ConfigValueSource<T> = <
-    T
->(
-    cf: ConfigFetcher<T>
-) =>
-    Object.assign(() => cf(), {
-        map: <S>(f: (t: T) => S | Promise<S>): ConfigValueSource<S> =>
-            configValueSource<S>(() => cf().then(f)),
-        flatMap: <S>(f: (t: T) => ConfigValueSource<S>): ConfigValueSource<S> =>
-            configValueSource<S>(() => cf().then((r) => f(r)())),
-    });
-
-interface ConfigValueSources {
-    of: <T>(cf: () => Promise<T>) => ConfigValueSource<T>;
-    lit: <T>(t: T | Promise<T>) => ConfigValueSource<T>;
-    env: (n: string) => ConfigValueSource<string | undefined>;
-    or: <T>(
-        cvs: ConfigValueSource<T | undefined>,
-        defaultVal: T
-    ) => ConfigValueSource<T>;
-    orDie: <T>(
-        cvs: ConfigValueSource<T | undefined>,
-        failureMsg: string
-    ) => ConfigValueSource<T>;
-    envOr: (e: string, defaultVal: string) => ConfigValueSource<string>;
-    envOrDie: (e: string) => ConfigValueSource<string>;
-    obj: <T>(config: ConfigFor<T>) => ConfigValueSource<T>;
+export function loadConfigFile<T = Record<string, unknown>>(file: string): T {
+    try {
+        return yaml.parse(fs.readFileSync(file, "utf8")) as T;
+    } catch (e) {
+        if (!/ENOENT:\s+no such file or directory/.test(e))
+            console.log("Error Loading " + file + ":", e);
+        throw e;
+    }
 }
 
-export const ConfigValueSources: ConfigValueSources = {
-    of: <T>(cf: () => Promise<T>) => configValueSource(cf),
-    lit: <T>(t: T | Promise<T>) => configValueSource(() => Promise.resolve(t)),
-    env: (n: string) =>
-        configValueSource(() => Promise.resolve(process.env[n])),
-    or: <T>(cvs: ConfigValueSource<T | undefined>, defaultVal: T) =>
-        cvs.map((s) =>
-            s ? Promise.resolve(s) : Promise.resolve<T>(defaultVal)
-        ),
-    orDie: <T>(cvs: ConfigValueSource<T | undefined>, failureMsg: string) =>
-        cvs.map((s) =>
-            s ? Promise.resolve(s) : Promise.reject<T>(failureMsg)
-        ),
-    envOr: (e: string, defaultVal: string) =>
-        ConfigValueSources.or(ConfigValueSources.env(e), defaultVal),
-    envOrDie: (e: string) =>
-        ConfigValueSources.orDie(
-            ConfigValueSources.env(e),
-            `Config load error: Expected env var ${e}`
-        ),
-    obj: <T>(config: ConfigFor<T>, orEnv?: boolean) => {
-        const configAny = config as { [k: string]: ConfigValueSource<unknown> };
-        const getValue = (src?: unknown): Promise<unknown> =>
-            !src
-                ? Promise.resolve(undefined)
-                : src instanceof Function
-                ? src()
-                : Object.getPrototypeOf(src) === Object.getPrototypeOf({})
-                ? ConfigValueSources.obj(src)()
-                : Array.isArray(src)
-                ? Promise.all(src.map(getValue))
-                : Promise.resolve(src);
-        const fetchedP = Object.keys(config).reduce(
-            (p, n) => [
-                ...p,
-                getValue(
-                    configAny[n] && !orEnv
-                        ? configAny[n]
-                        : process.env[
-                              n.replace(
-                                  /([A-Z])([A-Z][a-z])|([a-z0-9])([A-Z])/,
-                                  "$1$3_$2$4"
-                              )
-                          ]
-                ).then((v: unknown) => ({ [n]: v })),
-            ],
-            [] as Array<Promise<unknown>>
-        );
-        const result = Promise.all(fetchedP).then((fetched) => {
-            return fetched.reduce((p, n) => Object.assign({}, p, n), {});
-        });
+export function loadConfig<T = DefaultConfigType>(): T {
+    if (fs.existsSync("config.yml")) return loadConfigFile("config.yml");
+    else {
+        const templ = {};
+        multiFile = true;
+        const files = fs.readdirSync("config");
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].endsWith(".yml")) {
+                const keyName = files[i].substring(
+                    0,
+                    files[i].length - ".yml".length
+                );
+                templ[keyName] = loadConfigFile("config/" + files[i]);
+            }
+        }
+        return templ as T;
+    }
+}
 
-        return ConfigValueSources.lit(result as Promise<T>);
-    },
-};
+function substitute(file: Record<string, unknown>, p: string) {
+    let success = false;
+    const replaced = p.replace(/\${([\w.-]+)}/g, (match, term) => {
+        if (!success) success = Object.values(file).includes(term);
 
-/**
- * Loads a config object from a json file.
- * @param storageBackend Storage (keyv) backend
- * Valid backends include sqlite, postgres, etc.
- * If you want to load from a file use {@link loadConfigFile}
- * See https://www.npmjs.com/package/keyv for more information.
- */
-export const loadConfig = async <T>(
-    path: string,
-    opts: {
-        defaultConfig?: T;
-        validate?: boolean;
-    } = {}
-): Promise<T> => {
-    const config = await readFile({
-        path,
-        defaultContent: opts.defaultConfig,
-        parse: true,
+        return (getAt(file, term) ?? match) as string;
+    });
+    return { success: success, replace: replaced };
+}
+
+function transform(
+    file: Record<string, unknown>,
+    obj: Record<string, unknown>
+) {
+    let changed = false;
+    const resultant = Object.values(obj).map((p) => {
+        if (isPlainObject(p)) {
+            const transformed = transform(file, p as Record<string, unknown>);
+            if (!changed && transformed.changed) changed = true;
+
+            return transformed.result;
+        }
+        if (typeof p === "string") {
+            const subbed = substitute(file, p);
+            if (!changed && subbed.success) changed = true;
+
+            return subbed.replace;
+        }
+        if (Array.isArray(p))
+            for (let i = 0; i < p.length; i++)
+                if (typeof p[i] === "string")
+                    p[i] = substitute(file, p[i]).replace;
+
+        return p;
+    });
+    return { changed: changed, result: resultant };
+}
+
+export function requireSettings(
+    config: unknown,
+    settings: string[] | string
+): void {
+    const erredSettings = [];
+    settings = typeof settings === "string" ? [settings] : settings;
+    Object.values(settings).forEach((setting) => {
+        if (!Object.values(config).includes(setting))
+            erredSettings.push(setting);
     });
 
-    if (opts.validate) await validateOrReject(config);
+    if (erredSettings.length > 1)
+        throw new Error(
+            "The following settings are required in config.yml: " +
+                erredSettings.join("; ")
+        );
 
-    return await ConfigValueSources.obj<T>(config)();
-};
+    if (erredSettings.length === 1)
+        throw new Error(erredSettings[0] + " is required in config.yml");
+}
+
+function swapVariables(
+    environmentType: string,
+    envId: string,
+    configFile: Record<string, unknown>
+) {
+    function readAndSwap(obj: Record<string, unknown>) {
+        let altered = false;
+        do {
+            const temp = transform(obj, obj);
+            obj = temp.result;
+            altered = temp.changed;
+        } while (altered);
+        return obj;
+    }
+
+    const file = multiFile
+        ? Object.values(configFile).map(readAndSwap)
+        : configFile;
+    const newFile = Object.assign({}, file ?? {}, file[environmentType] ?? {}, {
+        envId: envId,
+        timestamp: timestamp,
+    });
+
+    return readAndSwap(newFile);
+}
+
+export function load<T = DefaultConfigType>(env?: string): T {
+    let config: DefaultConfigType = (loadConfig<
+        T
+    >() as unknown) as DefaultConfigType;
+    const environments: Record<string, unknown> = (config.environments ??
+        {}) as Record<string, unknown>;
+    const envId = env ?? process.env.ENVIRONMENT_ID;
+    const environmentTypes: Record<string, string> = (environments.static ??
+        Object.keys(config)) as Record<string, string>;
+    const environmentType: string = Object.values(environmentTypes).includes(
+        envId
+    )
+        ? envId
+        : (environments.default as string);
+    config = swapVariables(environmentType, envId, config);
+    return config as T;
+}

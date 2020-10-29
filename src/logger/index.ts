@@ -1,6 +1,5 @@
 import { LoggerInterface } from "./LoggerInterface";
 import { NullLogger } from "./NullLogger";
-
 /**
  * Helper method that automatcially returns a  null logger if the logger isn't present in options.
  */
