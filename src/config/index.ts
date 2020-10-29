@@ -138,7 +138,7 @@ export function loadConfiguration<T = DefaultConfigType>(opts: {
             fs.readFileSync(`config/${envId}.yml`, { encoding: "utf-8" })
         );
     // TODO: nested default values instead of defaultting whole config object
-    if (opts.defaultConfig)
+    if (opts.defaultConfig && !config)
         config =
             typeof opts.defaultConfig === "string"
                 ? yaml.parse(
