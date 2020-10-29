@@ -21,7 +21,7 @@ export function loadConfigFile<T = Record<string, unknown>>(file: string): T {
     }
 }
 
-export function loadConfig<T = DefaultConfigType>(): T {
+function loadConfig<T = DefaultConfigType>(): T {
     if (fs.existsSync("config.yml")) return loadConfigFile("config.yml");
     else {
         const templ = {};
@@ -125,13 +125,25 @@ function swapVariables(
     return readAndSwap(newFile);
 }
 
-export function load<T = DefaultConfigType>(env?: string): T {
+export function loadConfiguration<T = DefaultConfigType>(opts: {
+    env?: string;
+    defaultConfig?: Partial<T> | string;
+}): T {
     let config: DefaultConfigType = (loadConfig<
         T
     >() as unknown) as DefaultConfigType;
+    // TODO: nested default values instead of defaultting whole config object
+    if (opts.defaultConfig)
+        config =
+            typeof opts.defaultConfig === "string"
+                ? yaml.parse(
+                      fs.readFileSync(opts.defaultConfig, { encoding: "utf-8" })
+                  )
+                : (opts.defaultConfig as DefaultConfigType);
+
     const environments: Record<string, unknown> = (config.environments ??
         {}) as Record<string, unknown>;
-    const envId = env ?? process.env.ENVIRONMENT_ID;
+    const envId = opts.env ?? process.env.ENVIRONMENT_ID;
     const environmentTypes: Record<string, string> = (environments.static ??
         Object.keys(config)) as Record<string, string>;
     const environmentType: string = Object.values(environmentTypes).includes(
@@ -139,6 +151,6 @@ export function load<T = DefaultConfigType>(env?: string): T {
     )
         ? envId
         : (environments.default as string);
-    config = swapVariables(environmentType, envId, config);
+    // config = swapVariables(environmentType, envId, config);
     return config as T;
 }
