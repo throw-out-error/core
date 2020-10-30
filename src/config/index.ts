@@ -133,10 +133,19 @@ export function loadConfiguration<T = DefaultConfigType>(opts: {
         T
     >() as unknown) as DefaultConfigType;
     const envId = opts.env ?? process.env.ENVIRONMENT_ID;
-    if (envId)
+    if (envId) {
+        if (!fs.existsSync(`config/${envId}.yml`))
+            fs.writeFileSync(
+                `config/${envId}.yml`,
+                yaml.stringify(opts.defaultConfig ?? {}),
+                {
+                    encoding: "utf-8",
+                }
+            );
         config = yaml.parse(
             fs.readFileSync(`config/${envId}.yml`, { encoding: "utf-8" })
         );
+    }
     // TODO: nested default values instead of defaultting whole config object
     if (opts.defaultConfig && !config)
         config =
