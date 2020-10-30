@@ -132,12 +132,18 @@ export function loadConfiguration<T = DefaultConfigType>(opts: {
     let config: DefaultConfigType = (loadConfig<
         T
     >() as unknown) as DefaultConfigType;
+    const defaultCfg =
+        typeof opts.defaultConfig === "string"
+            ? yaml.parse(
+                  fs.readFileSync(opts.defaultConfig, { encoding: "utf-8" })
+              )
+            : (opts.defaultConfig as DefaultConfigType);
     const envId = opts.env ?? process.env.ENVIRONMENT_ID;
     if (envId) {
         if (!fs.existsSync(`config/${envId}.yml`))
             fs.writeFileSync(
                 `config/${envId}.yml`,
-                yaml.stringify(opts.defaultConfig ?? {}),
+                yaml.stringify(defaultCfg ?? {}),
                 {
                     encoding: "utf-8",
                 }
@@ -147,13 +153,7 @@ export function loadConfiguration<T = DefaultConfigType>(opts: {
         );
     }
     // TODO: nested default values instead of defaultting whole config object
-    if (opts.defaultConfig && !config)
-        config =
-            typeof opts.defaultConfig === "string"
-                ? yaml.parse(
-                      fs.readFileSync(opts.defaultConfig, { encoding: "utf-8" })
-                  )
-                : (opts.defaultConfig as DefaultConfigType);
+    if (defaultCfg && !config) config = defaultCfg;
 
     // config = swapVariables(environmentType, envId, config);
     return config as T;
