@@ -3,6 +3,8 @@ import chalk from "chalk";
 import * as dotenv from "dotenv";
 import * as path from "path";
 import Joi from "joi";
+import yaml from "yaml";
+import { readFileSync, existsSync } from "fs";
 
 import { dbg, NO_ENV_FILE_ERROR } from "./constants";
 import { InvalidConfigurationError, MissingEnvFileError } from "./errors";
@@ -258,22 +260,34 @@ export class ConfigManager extends AbstractConfigManager {
             chalk.yellow("> Parsing dotenv config file: ", this.envFilePath)
         );
 
-        const config = dotenv.config({
-            path: this.envFilePath,
-        });
-        if (config.error) {
-            let errorMessage: string;
-            if ((config.error as ImprovedError).code === "ENOENT")
-                throw new MissingEnvFileError(config.error.message);
-            // errorMessage = `Fatal error loading environment. The following file is missing: \n${config.error.path}`;
-            else {
-                errorMessage = `Fatal unknown error loading environment: ${config.error.message}`;
-                this.handleFatalError(errorMessage);
-            }
-        }
+        if (
+            this.envFilePath.endsWith(".yml") ||
+            this.envFilePath.endsWith(".yaml")
+        ) {
+            if (!existsSync(this.envFilePath))
+                throw new MissingEnvFileError("Missing yml environment file!");
 
-        this.traceProduction && dbg.cfg("> Parsed config: ", config.parsed);
-        return config.parsed;
+            return yaml.parse(
+                readFileSync(this.envFilePath, { encoding: "utf-8" })
+            );
+        } else {
+            const config = dotenv.config({
+                path: this.envFilePath,
+            });
+            if (config.error) {
+                let errorMessage: string;
+                if ((config.error as ImprovedError).code === "ENOENT")
+                    throw new MissingEnvFileError(config.error.message);
+                // errorMessage = `Fatal error loading environment. The following file is missing: \n${config.error.path}`;
+                else {
+                    errorMessage = `Fatal unknown error loading environment: ${config.error.message}`;
+                    this.handleFatalError(errorMessage);
+                }
+            }
+
+            this.traceProduction && dbg.cfg("> Parsed config: ", config.parsed);
+            return config.parsed;
+        }
     }
 
     /**
