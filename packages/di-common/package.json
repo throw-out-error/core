@@ -1,8 +1,8 @@
 {
-    "name": "@toes/config",
+    "name": "@toes/di",
     "private": false,
-    "version": "0.0.2",
-    "description": "Config library w/ dependency injection",
+    "version": "0.0.1",
+    "description": "The core of the toes",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
@@ -33,16 +33,10 @@
         "access": "public"
     },
     "dependencies": {
-        "debug": "^4.2.0",
-        "chalk": "^4.1.0",
-        "dotenv": "^8.2.0",
-        "@toes/core": "workspace:*"
-    },
-    "peerDependencies": {
-        "joi": "^17.3.0"
+        "@toes/core": "workspace:*",
+        "iterare": "^1.2.1"
     },
     "devDependencies": {
-        "@types/joi": "14.3.4",
         "@types/chai": "^4.2.14",
         "@types/mocha": "^8.0.3",
         "@types/node": "^14.14.6",
