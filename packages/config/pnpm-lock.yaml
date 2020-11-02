@@ -1,4 +1,5 @@
 dependencies:
+  '@toes/core': 'link:../core'
   chalk: 4.1.0
   debug: 4.2.0
   dotenv: 8.2.0
@@ -2067,6 +2068,7 @@ packages:
     resolution:
       integrity: sha1-5a2ryKz0CPY4X8dklWhMiOavaJo=
 specifiers:
+  '@toes/core': 'workspace:*'
   '@types/chai': ^4.2.14
   '@types/debug': ^0.0.30
   '@types/joi': ^14.3.4
