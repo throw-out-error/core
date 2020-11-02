@@ -1,4 +1,4 @@
-import { DI, Logger } from "@toes/core";
+import { DI, ConsoleLogger, PrefixLogger } from "@toes/core";
 import { CONFIG_OPTIONS } from "./constants";
 import { ConfigModuleOptions, EnvHash } from "./interfaces";
 
@@ -9,11 +9,16 @@ import { ConfigModuleOptions, EnvHash } from "./interfaces";
  * Invokes the entry point in the ConfigManager.
  */
 export abstract class AbstractConfigManager {
-    protected readonly logger = new Logger("ConfigManager", false);
+    protected readonly logger = new PrefixLogger(
+        new ConsoleLogger(),
+        "ConfigManager"
+    );
 
     protected readonly procEnv: EnvHash;
 
-    constructor(@Inject(CONFIG_OPTIONS) public options: ConfigModuleOptions) {
+    constructor(
+        @DI.Inject(CONFIG_OPTIONS) public options: ConfigModuleOptions
+    ) {
         this.procEnv = Object.assign({}, process.env);
         this.loadAndValidateEnvFile();
     }
