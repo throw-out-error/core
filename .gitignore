@@ -14,6 +14,7 @@ logs
 # Misc
 .DS_Store
 .dccache
+.ultra.cache.json
 
 # IDE Settings
 .vscode

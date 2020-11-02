@@ -10,4 +10,4 @@ This package is currently work in progress!
 
 ## Credits
 
-Special thanks to [trivality](https://github.com/triviality-js/triviality) for the original logger code.
+Special thanks to [trivality](https://github.com/triviality-js/triviality) for the original logger code. Also a ton of credit goes to the authors of nestjs for the dependency injection.
