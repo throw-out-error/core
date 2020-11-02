@@ -1,4 +1,10 @@
 interface UseEnvOptions {
+    /**
+     * Name of the folder, relative to the project root directory, containing
+     * the `.env` file.
+     *
+     * Defaults to the project root directory.
+     */
     folder?: string;
 }
 

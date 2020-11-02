@@ -183,10 +183,9 @@ export class ConfigManager extends AbstractConfigManager {
     /**
      * @todo: should probably validate that env is parsable as path component
      */
-    private isValidEnvironment(environment) {
-        if (typeof environment === "undefined") {
-            return false;
-        }
+    private isValidEnvironment(environment?: string) {
+        if (typeof environment === "undefined") return false;
+
         return true;
     }
 
@@ -246,7 +245,7 @@ export class ConfigManager extends AbstractConfigManager {
         const envPrefix = this.environment;
 
         // construct the path to the config file
-        const filePath = path.resolve(envRoot, envRootSubfolder, envPrefix);
+        const filePath = path.resolve(envRootSubfolder, envPrefix);
 
         this.envFilePath = filePath + ".env";
     }
