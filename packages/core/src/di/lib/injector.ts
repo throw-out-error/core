@@ -27,6 +27,13 @@ export class Injector {
             this.opts.bootstrap.forEach((provider) => this.get(provider));
     }
 
+    set(key: ProviderToken<unknown>, value: ClassProviderToken<unknown>) {
+        this.opts.providers.push({
+            provide: key,
+            useClass: value,
+        });
+    }
+
     /**
      * recursively check if a singleton instance is available for a provider
      */
@@ -38,12 +45,14 @@ export class Injector {
         else return this.parent.has(token);
     }
 
-    resolve<T = Record<string, unknown>>(token: ProviderToken<T>): T {
+    async resolve<T = Record<string, unknown>>(
+        token: ProviderToken<T>
+    ): Promise<T> {
         const provider = this.findProvider(token);
 
         if (provider)
             // if an override is available for this Injector use that
-            return this.createFromOverride(provider) as T;
+            return (await this.createFromOverride(provider)) as T;
 
         if (typeof provider === "string")
             throw new Error(`No provider found for ${provider}`);
@@ -64,14 +73,16 @@ export class Injector {
     /**
      * fetches a singleton instance of a provider
      */
-    get<T = Record<string, unknown>>(token: ProviderToken<T>): T {
+    async get<T = Record<string, unknown>>(
+        token: ProviderToken<T>
+    ): Promise<T> {
         if (typeof token === "string" && this.providerMap.has(token))
             // if provider has already been created in this scope return it
             return this.providerMap.get(token) as T;
         else if (this.providerWeakMap.has(token as SymbolToken<T>))
             return this.providerWeakMap.get(token as SymbolToken<T>) as T;
 
-        const instance: T = this.resolve(token);
+        const instance: T = await this.resolve(token);
 
         if (typeof token === "string") this.providerMap.set(token, instance);
         else this.providerWeakMap.set(token, instance);
@@ -83,12 +94,12 @@ export class Injector {
         return P.deps ? new P(...P.deps.map((dep) => this.get(dep))) : new P();
     }
 
-    private createFromOverride<T = Record<string, unknown>>(
+    private async createFromOverride<T = Record<string, unknown>>(
         provider: OverrideProvider<T>
-    ): T | null {
+    ): Promise<T> {
         if ("useClass" in provider) return this.create(provider.useClass);
         else if ("useFactory" in provider)
-            return this.createFromFactory(provider as FactoryProvider<T>);
+            return await this.createFromFactory(provider as FactoryProvider<T>);
 
         return null;
     }

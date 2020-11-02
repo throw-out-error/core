@@ -25,7 +25,7 @@ export interface ClassProvider<T> {
 
 export interface FactoryProvider<T> {
     provide: ProviderToken<T>;
-    useFactory: (...args: unknown[]) => T;
+    useFactory: (...args: unknown[]) => Promise<T>;
     deps?: ProviderToken<unknown>[];
     provideInRoot?: boolean;
 }
