@@ -18,8 +18,8 @@ export abstract class AbstractConfigManager {
 
     constructor(@Inject(CONFIG_OPTIONS) public options: ConfigModuleOptions) {
         this.procEnv = Object.assign({}, process.env);
-        this.loadAndValidateEnvFile();
+        this.load();
     }
 
-    protected abstract loadAndValidateEnvFile();
+    protected abstract load();
 }

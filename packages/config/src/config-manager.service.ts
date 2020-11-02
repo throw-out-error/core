@@ -33,7 +33,7 @@ export class ConfigManager extends AbstractConfigManager {
      * Entry point called by base class.
      * Execute the steps to locate the env file, load it, and validate it
      */
-    protected loadAndValidateEnvFile(): void {
+    public load(): void {
         this.processOptions();
         this.resolveEnvFilePath();
 
