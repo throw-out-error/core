@@ -64,10 +64,10 @@ export class Injector {
             (this.parent.has(symbolToken) ?? symbolToken.provideInRoot)
         )
             // if a parent is available and contains an instance of the provider already use that
-            return this.parent.get(token);
+            return await this.parent.get(token);
 
         // if nothing else found assume provider is a class provider
-        return this.create(<ClassProviderToken<T>>token);
+        return await this.create(<ClassProviderToken<T>>token);
     }
 
     /**
@@ -80,7 +80,9 @@ export class Injector {
             // if provider has already been created in this scope return it
             return this.providerMap.get(token) as T;
         else if (this.providerWeakMap.has(token as SymbolToken<T>))
-            return this.providerWeakMap.get(token as SymbolToken<T>) as T;
+            return (await this.providerWeakMap.get(
+                token as SymbolToken<T>
+            )) as T;
 
         const instance: T = await this.resolve(token);
 
@@ -103,7 +105,7 @@ export class Injector {
     private async createFromOverride<T = Record<string, unknown>>(
         provider: OverrideProvider<T>
     ): Promise<T> {
-        if ("useClass" in provider) return this.create(provider.useClass);
+        if ("useClass" in provider) return await this.create(provider.useClass);
         else if ("useFactory" in provider)
             return await this.createFromFactory(provider as FactoryProvider<T>);
 

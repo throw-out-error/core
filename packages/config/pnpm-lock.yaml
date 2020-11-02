@@ -1,8 +1,8 @@
 dependencies:
-  '@toes/core': 'link:../core'
   chalk: 4.1.0
   debug: 4.2.0
   dotenv: 8.2.0
+  typedi: 0.8.0
   yaml: 1.10.0
 devDependencies:
   '@types/chai': 4.2.14
@@ -1931,6 +1931,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
+  /typedi/0.8.0:
+    dev: false
+    resolution:
+      integrity: sha512-/c7Bxnm6eh5kXx2I+mTuO+2OvoWni5+rXA3PhXwVWCtJRYmz3hMok5s1AKLzoDvNAZqj/Q/acGstN0ri5aQoOA==
   /typescript/4.0.5:
     dev: true
     engines:
@@ -2063,7 +2067,6 @@ packages:
     resolution:
       integrity: sha1-5a2ryKz0CPY4X8dklWhMiOavaJo=
 specifiers:
-  '@toes/core': 'workspace:*'
   '@types/chai': ^4.2.14
   '@types/debug': ^0.0.30
   '@types/joi': ^14.3.4
@@ -2083,5 +2086,6 @@ specifiers:
   prettier: ^2.1.2
   ts-essentials: ^7.0.1
   ts-mocha: ^8.0.0
+  typedi: ^0.8.0
   typescript: ^4.0.5
   yaml: ^1.10.0

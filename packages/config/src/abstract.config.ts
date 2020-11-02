@@ -1,7 +1,7 @@
-import { Inject, ConsoleLogger, PrefixLogger } from "@toes/core";
+import { ConsoleLogger, PrefixLogger } from "@toes/core";
 import { CONFIG_OPTIONS } from "./constants";
 import { ConfigModuleOptions, EnvHash } from "./interfaces";
-
+import { Inject } from "typedi";
 /**
  * Root abstract class for ConfigManager. Provides core members and constructor
  * to derived classes.
