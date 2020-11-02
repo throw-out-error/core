@@ -1,3 +1,4 @@
-export * from "./decorator";
-export * from "./interfaces";
-export * as Constants from "./constants";
+export * from "./lib/injector";
+export * from "./lib/provider";
+export * from "./lib/inject";
+export * from "./lib/service";

@@ -1,4 +1,4 @@
-import { DI, ConsoleLogger, PrefixLogger } from "@toes/core";
+import { Inject, ConsoleLogger, PrefixLogger } from "@toes/core";
 import { CONFIG_OPTIONS } from "./constants";
 import { ConfigModuleOptions, EnvHash } from "./interfaces";
 
@@ -16,9 +16,7 @@ export abstract class AbstractConfigManager {
 
     protected readonly procEnv: EnvHash;
 
-    constructor(
-        @DI.Inject(CONFIG_OPTIONS) public options: ConfigModuleOptions
-    ) {
+    constructor(@Inject(CONFIG_OPTIONS) public options: ConfigModuleOptions) {
         this.procEnv = Object.assign({}, process.env);
         this.loadAndValidateEnvFile();
     }

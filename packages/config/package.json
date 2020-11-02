@@ -42,7 +42,8 @@
         "joi": "^17.3.0"
     },
     "devDependencies": {
-        "@types/joi": "14.3.4",
+        "@types/debug": "^0.0.30",
+        "@types/joi": "^14.3.4",
         "@types/chai": "^4.2.14",
         "@types/mocha": "^8.0.3",
         "@types/node": "^14.14.6",

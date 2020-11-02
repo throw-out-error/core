@@ -1,13 +1,5 @@
-# @toes/core
+# @toes/core-monorepo
 
-## The Core of The Toes
+## The Core of The Toes Monorepo
 
-This is our core typescript package for throw-out-error that currently includes a logger.
-
-## WIP
-
-This package is currently work in progress!
-
-## Credits
-
-Special thanks to [trivality](https://github.com/triviality-js/triviality) for the original logger code. Also a ton of credit goes to the authors of nestjs for the dependency injection.
+This monorepo contains our core typescript packages for Throw Out Error.

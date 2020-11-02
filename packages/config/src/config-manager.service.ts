@@ -1,4 +1,4 @@
-import { DI, MissingOverrideError } from "@toes/core";
+import { MissingOverrideError } from "@toes/core";
 import chalk from "chalk";
 import * as dotenv from "dotenv";
 import * as path from "path";
@@ -10,7 +10,6 @@ import { AbstractConfigManager } from "./abstract.config";
 import { EnvHash } from "./interfaces";
 import { ImprovedError } from "../../core/dist/util/improved-error";
 
-@DI.Injectable()
 export class ConfigManager extends AbstractConfigManager {
     // hash that contains our config from the environment after validation
     private envConfig: EnvHash | void;
@@ -26,13 +25,13 @@ export class ConfigManager extends AbstractConfigManager {
     private traceProduction = false;
 
     // map of how each env var has been resolved
-    private resolveMap;
+    private resolveMap: Record<string, unknown>;
 
     /**
      * Entry point called by base class.
      * Execute the steps to locate the env file, load it, and validate it
      */
-    protected loadAndValidateEnvFile() {
+    protected loadAndValidateEnvFile(): void {
         this.processOptions();
         this.resolveEnvFilePath();
 
@@ -40,7 +39,7 @@ export class ConfigManager extends AbstractConfigManager {
         // By default, a missing .env file is considered a fatal error.
         // However, some projects prefer to not deploy any `.env` file in production,
         // and pull all env vars from the external environment.
-        let loadedConfig;
+        let loadedConfig: EnvHash;
         try {
             loadedConfig = this.loadEnvFile();
         } catch (error) {
@@ -200,18 +199,11 @@ export class ConfigManager extends AbstractConfigManager {
         // If we're in dev, just use the project root (parent of /src)
         // If not, use the current working directory
         // Fail if we can't find one
-        if (process.mainModule && process.mainModule.filename) {
-            envRoot = path.resolve(
-                path.dirname(process.mainModule.filename),
-                ".."
-            );
-        } else {
-            envRoot = process.cwd();
-        }
+        if (require.main && require.main.filename)
+            envRoot = path.resolve(path.dirname(require.main.filename), "..");
+        else envRoot = process.cwd();
 
-        if (!envRoot) {
-            this.handleFatalError("Could not locate root directory");
-        }
+        if (!envRoot) this.handleFatalError("Could not locate root directory");
 
         dbg.cfg("> envRoot: ", envRoot);
         dbg.cfg("> resolving envfile path...");
@@ -235,9 +227,8 @@ export class ConfigManager extends AbstractConfigManager {
             return;
         }
 
-        if (!this.options.useEnv) {
+        if (!this.options.useEnv)
             this.handleFatalError("Invalid or missing configuration options.");
-        }
 
         // Otherwise, we're using the environment method
         dbg.cfg("> ... using environment");
@@ -247,9 +238,8 @@ export class ConfigManager extends AbstractConfigManager {
         if (
             typeof this.options.useEnv === "object" &&
             this.options.useEnv.folder
-        ) {
+        )
             envRootSubfolder = this.options.useEnv.folder;
-        }
 
         const envPrefix = this.environment;
 
@@ -308,7 +298,7 @@ export class ConfigManager extends AbstractConfigManager {
         const missingKeyErrors = [];
         const resolveMap = {};
 
-        Object.entries(requiredConfig).forEach(([key, value]) => {
+        Object.entries(requiredConfig).forEach(([key]) => {
             resolveMap[key] = {
                 dotenv: updatedConfig[key] ? updatedConfig[key] : "--",
                 env: this.procEnv[key] ? this.procEnv[key] : "--",
@@ -323,9 +313,8 @@ export class ConfigManager extends AbstractConfigManager {
                 isExtra: false,
             };
             updatedConfig[key] = process.env[key];
-            if (requiredConfig[key].required && !updatedConfig[key]) {
+            if (requiredConfig[key].required && !updatedConfig[key])
                 missingKeyErrors.push(`"${key}" is required, but missing`);
-            }
 
             if (!updatedConfig[key]) {
                 updatedConfig[key] = requiredConfig[key].default;
@@ -336,7 +325,7 @@ export class ConfigManager extends AbstractConfigManager {
 
         // add extras to the resolveMap
         if (this.options.allowExtras) {
-            Object.entries(updatedConfig).forEach(([key, value]) => {
+            Object.entries(updatedConfig).forEach(([key]) => {
                 if (!requiredConfig[key]) {
                     resolveMap[key] = {
                         dotenv: updatedConfig[key] ? updatedConfig[key] : "--",
@@ -379,19 +368,17 @@ export class ConfigManager extends AbstractConfigManager {
         try {
             configSpec = this.provideConfigSpec(this.environment);
         } catch (error) {
-            let errorMessage;
-            if (error instanceof MissingOverrideError) {
+            let errorMessage: string;
+            if (error instanceof MissingOverrideError)
                 errorMessage =
                     "Fatal error: required method provideConfigSpec missing from class extending ConfigService";
-            } else {
+            else
                 errorMessage = `Unhandled error from overridden provideConfigSpec: ${error.message}`;
-            }
+
             this.handleFatalError(errorMessage);
         }
 
-        if (!configSpec) {
-            throw new Error("no schema");
-        }
+        if (!configSpec) throw new Error("no schema");
 
         const schema = {};
         const required = {};
@@ -403,16 +390,15 @@ export class ConfigManager extends AbstractConfigManager {
             }
             schema[key] = configSpec[key].validate;
 
-            if (configSpec[key].required) {
+            if (configSpec[key].required)
                 required[key] = {
                     required: true,
                 };
-            } else {
-                if (!configSpec[key].default) {
+            else {
+                if (!configSpec[key].default)
                     this.handleFatalError(
                         `Missing required default field in configSchema for key: ${key}`
                     );
-                }
 
                 required[key] = {
                     required: false,
@@ -433,21 +419,19 @@ export class ConfigManager extends AbstractConfigManager {
      * fail validation
      */
     private processConfigErrors(missingKeys, validationErrors) {
-        if (missingKeys.length > 0) {
+        if (missingKeys.length > 0)
             this.logger.error(
                 `Configuration error.  The following required environment variables are missing: \n--> ${missingKeys.join(
                     "\n--> "
                 )}`
             );
-        }
 
-        if (validationErrors.length > 0) {
+        if (validationErrors.length > 0)
             this.logger.error(
                 `Configuration error.  The following environment variables failed validation: \n--> ${validationErrors.join(
                     "\n--> "
                 )}`
             );
-        }
     }
 
     /**
@@ -455,11 +439,10 @@ export class ConfigManager extends AbstractConfigManager {
      * @param error
      * @returns array of formatted Joi validation errors
      */
-    private extractValidationErrorMessages(errors) {
+    private extractValidationErrorMessages(errors: Joi.ValidationError) {
         const errorMessages = [];
-        for (const detail of errors.details) {
-            errorMessages.push(detail.message);
-        }
+        for (const detail of errors.details) errorMessages.push(detail.message);
+
         return errorMessages;
     }
 
@@ -471,7 +454,7 @@ export class ConfigManager extends AbstractConfigManager {
      * @param {string} error message
      * @throws {exception}
      */
-    private handleFatalError(message) {
+    private handleFatalError(message: string) {
         switch (this.options.onError) {
             case "throw":
                 this.logger.error(`${message} -- See exception for details`);
@@ -486,7 +469,6 @@ export class ConfigManager extends AbstractConfigManager {
             case "exit":
                 this.logger.error(`${message} -- App will now exit`);
                 process.exit(0);
-                break;
         }
     }
 
@@ -508,7 +490,7 @@ export class ConfigManager extends AbstractConfigManager {
      *
      * @returns a map of the resolution of each environment variable
      */
-    public trace() {
+    public trace(): Record<string, unknown> {
         return this.resolveMap;
     }
 }
