@@ -90,8 +90,14 @@ export class Injector {
         return instance;
     }
 
-    create<T>(P: ClassProviderToken<T>): T {
-        return P.deps ? new P(...P.deps.map((dep) => this.get(dep))) : new P();
+    async create<T>(P: ClassProviderToken<T>): Promise<T> {
+        return P.deps
+            ? new P(
+                  ...(await Promise.all(
+                      P.deps.map(async (dep) => await this.get(dep))
+                  ))
+              )
+            : new P();
     }
 
     private async createFromOverride<T = Record<string, unknown>>(
