@@ -36,11 +36,11 @@
         "debug": "^4.2.0",
         "chalk": "^4.1.0",
         "dotenv": "^8.2.0",
-        "yaml": "^1.10.0"
+        "yaml": "^1.10.0",
+        "@toes/core": "workspace:*"
     },
     "peerDependencies": {
-        "joi": "^17.3.0",
-        "@toes/core": "workspace:*"
+        "joi": "^17.3.0"
     },
     "devDependencies": {
         "@types/debug": "^0.0.30",
