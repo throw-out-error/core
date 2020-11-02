@@ -43,7 +43,6 @@
         "joi": "^17.3.0"
     },
     "devDependencies": {
-        "@types/yaml": "^1.9.7",
         "@types/debug": "^0.0.30",
         "@types/joi": "^14.3.4",
         "@types/chai": "^4.2.14",

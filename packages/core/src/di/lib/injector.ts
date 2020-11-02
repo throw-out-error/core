@@ -104,12 +104,12 @@ export class Injector {
         return null;
     }
 
-    private createFromFactory<T = Record<string, unknown>>(
+    private async createFromFactory<T = Record<string, unknown>>(
         token: FactoryProvider<T>
     ) {
         const deps = token.deps ? token.deps.map((dep) => this.get(dep)) : [];
 
-        return token.useFactory(token, ...deps);
+        return await token.useFactory(token, ...deps);
     }
 
     private findProvider(
