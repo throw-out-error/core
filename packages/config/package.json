@@ -1,62 +1,62 @@
 {
-    "name": "@toes/config",
-    "private": false,
-    "version": "0.0.2",
-    "description": "Config library w/ dependency injection",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "files": [
-        "dist"
-    ],
-    "scripts": {
-        "prepublishOnly": "pnpm run lint && pnpm run build",
-        "build": "tsc",
-        "watch": "tsc --watch",
-        "lint": "eslint --fix --quiet src/**/*",
-        "test": "ts-mocha src/**/*.test.ts"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/throw-out-error/core.git"
-    },
-    "keywords": [
-        "typescript",
-        "config"
-    ],
-    "author": "Theo Paris",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/throw-out-error/core/issues"
-    },
-    "homepage": "https://github.com/throw-out-error/core#README",
-    "publishConfig": {
-        "access": "public"
-    },
-    "dependencies": {
-        "debug": "^4.2.0",
-        "chalk": "^4.1.0",
-        "dotenv": "^8.2.0",
-        "@toes/core": "workspace:*"
-    },
-    "peerDependencies": {
-        "joi": "^17.3.0"
-    },
-    "devDependencies": {
-        "@types/joi": "14.3.4",
-        "@types/chai": "^4.2.14",
-        "@types/mocha": "^8.0.3",
-        "@types/node": "^14.14.6",
-        "@typescript-eslint/eslint-plugin": "^4.6.0",
-        "@typescript-eslint/parser": "^4.6.0",
-        "chai": "^4.2.0",
-        "eslint": "^7.12.1",
-        "eslint-config-prettier": "^6.15.0",
-        "eslint-plugin-prettier": "^3.1.4",
-        "mocha": "^8.2.0",
-        "npm-run-all": "^4.1.5",
-        "prettier": "^2.1.2",
-        "ts-essentials": "^7.0.1",
-        "ts-mocha": "^8.0.0",
-        "typescript": "^4.0.5"
-    }
+	"name": "@toes/config",
+	"private": false,
+	"version": "0.0.2",
+	"description": "Config library w/ dependency injection",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"prepublishOnly": "pnpm run lint && pnpm run build",
+		"build": "tsc",
+		"watch": "tsc --watch",
+		"lint": "eslint --fix --quiet src/**/*",
+		"test": "ts-mocha src/**/*.test.ts"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/throw-out-error/core.git"
+	},
+	"keywords": [
+		"typescript",
+		"config"
+	],
+	"author": "Theo Paris",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/throw-out-error/core/issues"
+	},
+	"homepage": "https://github.com/throw-out-error/core#README",
+	"publishConfig": {
+		"access": "public"
+	},
+	"dependencies": {
+		"debug": "^4.2.0",
+		"chalk": "^4.1.0",
+		"dotenv": "^8.2.0",
+		"@toes/core": "0.0.2"
+	},
+	"peerDependencies": {
+		"joi": "^17.3.0"
+	},
+	"devDependencies": {
+		"@types/joi": "14.3.4",
+		"@types/chai": "^4.2.14",
+		"@types/mocha": "^8.0.3",
+		"@types/node": "^14.14.6",
+		"@typescript-eslint/eslint-plugin": "^4.6.0",
+		"@typescript-eslint/parser": "^4.6.0",
+		"chai": "^4.2.0",
+		"eslint": "^7.12.1",
+		"eslint-config-prettier": "^6.15.0",
+		"eslint-plugin-prettier": "^3.1.4",
+		"mocha": "^8.2.0",
+		"npm-run-all": "^4.1.5",
+		"prettier": "^2.1.2",
+		"ts-essentials": "^7.0.1",
+		"ts-mocha": "^8.0.0",
+		"typescript": "^4.0.5"
+	}
 }

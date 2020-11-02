@@ -1,4 +1,4 @@
-export interface Module {
+export interface IModule {
     onEnable<T>(): Promise<T>;
     onDisable<T>(): Promise<T>;
 }

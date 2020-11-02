@@ -1,4 +1,4 @@
-import { Module, DynamicModule, Provider } from "@toes/core";
+import { DI } from "@toes/core";
 import { CONFIG_OPTIONS } from "./constants";
 import {
     ConfigModuleOptions,
@@ -6,7 +6,7 @@ import {
     ConfigOptionsFactory,
 } from "./interfaces";
 
-@Module({})
+@DI.Module({})
 export class ConfigManagerModule {
     /**
      * Registers a configured ConfigManagerModule for import into the current module.
@@ -17,7 +17,7 @@ export class ConfigManagerModule {
      *
      * @returns {DynamicModule} the ConfigManagerModule, fully configured
      */
-    public static register(options: ConfigModuleOptions): DynamicModule {
+    public static register(options: ConfigModuleOptions): DI.DynamicModule {
         return {
             module: ConfigManagerModule,
             providers: [
@@ -30,7 +30,7 @@ export class ConfigManagerModule {
         };
     }
 
-    static registerAsync(options: ConfigModuleAsyncOptions): DynamicModule {
+    static registerAsync(options: ConfigModuleAsyncOptions): DI.DynamicModule {
         return {
             module: ConfigManagerModule,
             imports: options.imports || [],
@@ -41,7 +41,7 @@ export class ConfigManagerModule {
 
     private static createAsyncProviders(
         options: ConfigModuleAsyncOptions
-    ): Provider[] {
+    ): DI.Provider[] {
         if (options.useExisting || options.useFactory) {
             return [this.createAsyncOptionsProvider(options)];
         }
@@ -56,7 +56,7 @@ export class ConfigManagerModule {
 
     private static createAsyncOptionsProvider(
         options: ConfigModuleAsyncOptions
-    ): Provider {
+    ): DI.Provider {
         if (options.useFactory) {
             return {
                 provide: CONFIG_OPTIONS,

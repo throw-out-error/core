@@ -7,7 +7,7 @@ import { ConfigOptionsFactory } from "./config-options-factory.interface";
 
 export interface ConfigModuleAsyncOptions
     extends Pick<DI.ModuleMetadata, "imports"> {
-    inject?: unknown[];
+    inject?: never[];
     useClass?: DI.Type<ConfigOptionsFactory>;
     useExisting?: DI.Type<ConfigOptionsFactory>;
     useFactory?: (
