@@ -393,32 +393,6 @@ export class ConfigManager extends AbstractConfigManager {
 
         if (!configSpec) throw new Error("no schema");
 
-        const schema = {};
-        const required = {};
-        Object.keys(configSpec).map((key) => {
-            if (!configSpec[key].validate) {
-                this.handleFatalError(
-                    `Missing required validate field in configSchema for key: ${key}`
-                );
-            }
-            schema[key] = configSpec[key].validate;
-
-            if (configSpec[key].required)
-                required[key] = {
-                    required: true,
-                };
-            else {
-                if (!configSpec[key].default)
-                    this.handleFatalError(
-                        `Missing required default field in configSchema for key: ${key}`
-                    );
-
-                required[key] = {
-                    required: false,
-                    default: configSpec[key].default,
-                };
-            }
-        });
         dbg.cfg(
             `> Loaded ${
                 Object.keys(configSpec).length
