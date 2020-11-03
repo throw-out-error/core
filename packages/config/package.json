@@ -1,7 +1,7 @@
 {
     "name": "@toes/config",
     "private": false,
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Config library w/ dependency injection",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",

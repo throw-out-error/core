@@ -23,7 +23,7 @@ export class ConfigManager<K = Record<string, unknown>> extends ConfigService<
     load(): Record<string, unknown> {
         let result: Record<string, unknown> = this.internalConfig;
         if (!result) result = JSON.parse(process.env.CONFIG ?? "{}");
-        if (this.opts.yamlPath) {
+        if (!result && this.opts.yamlPath) {
             try {
                 result = parse(
                     readFileSync(this.opts.yamlPath, { encoding: "utf-8" })
