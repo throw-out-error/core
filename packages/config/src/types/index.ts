@@ -1,2 +1,2 @@
-export * from './config.type';
-export * from './no-infer.type';
+export * from "./config.type";
+export * from "./no-infer.type";

@@ -1,7 +1,7 @@
-export type ConfigType<T extends (...args: any) => any> = T extends (
-  ...args: any
+export type ConfigType<T extends (...args: unknown[]) => unknown> = T extends (
+    ...args: unknown[]
 ) => infer ReturnVal
-  ? ReturnVal extends Promise<infer AsyncReturnVal>
-    ? AsyncReturnVal
-    : ReturnVal
-  : any;
+    ? ReturnVal extends Promise<infer AsyncReturnVal>
+        ? AsyncReturnVal
+        : ReturnVal
+    : unknown;
