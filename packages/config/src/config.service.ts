@@ -7,10 +7,7 @@ import { NoInferType } from "./types";
 
 @Injectable()
 export class ConfigService<K = Record<string, unknown>> {
-    constructor(
-        @Inject(CONFIGURATION_TOKEN)
-        private readonly internalConfig: Record<string, unknown> = {}
-    ) {}
+    constructor(protected internalConfig: Record<string, unknown> = {}) {}
 
     /**
      * Get a configuration value (either custom configuration or process environment variable)
