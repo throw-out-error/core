@@ -1,7 +1,7 @@
 {
     "name": "@toes/core",
     "private": false,
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "The core of the toes",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -20,8 +20,7 @@
         "url": "https://github.com/throw-out-error/core.git"
     },
     "keywords": [
-        "typescript",
-        "config"
+        "typescript"
     ],
     "author": "Theo Paris",
     "license": "MIT",
