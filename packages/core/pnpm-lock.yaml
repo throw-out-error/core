@@ -1,16 +1,13 @@
 dependencies:
   date-fns: 2.16.1
-  is-what: 3.11.2
-  reflect-metadata: 0.1.13
   rotating-file-stream: 2.1.3
-  ts-ioc-container: 1.3.11
+  treeify: 1.1.0
   ts-log: 2.2.3
-  uuid: 8.3.1
-  yaml: 1.10.0
 devDependencies:
   '@types/chai': 4.2.14
   '@types/mocha': 8.0.3
   '@types/node': 14.14.6
+  '@types/treeify': 1.0.0
   '@typescript-eslint/eslint-plugin': 4.6.0_5b45abdb13fea4fae68d9888b9d8cc1b
   '@typescript-eslint/parser': 4.6.0_eslint@7.12.1+typescript@4.0.5
   chai: 4.2.0
@@ -105,6 +102,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-6QlRuqsQ/Ox/aJEQWBEJG7A9+u7oSYl3mem/K8IzxXG/kAGbV1YPD9Bg9Zw3vyxC/YP+zONKwy8hGkSt1jxFMw==
+  /@types/treeify/1.0.0:
+    dev: true
+    resolution:
+      integrity: sha512-ONpcZAEYlbPx4EtJwfTyCDQJGUpKf4sEcuySdCVjK5Fj/3vHp5HII1fqa1/+qrsLnpYELCQTfVW/awsGJePoIg==
   /@typescript-eslint/eslint-plugin/4.6.0_5b45abdb13fea4fae68d9888b9d8cc1b:
     dependencies:
       '@typescript-eslint/experimental-utils': 4.6.0_eslint@7.12.1+typescript@4.0.5
@@ -1123,10 +1124,6 @@ packages:
       node: '>= 0.4'
     resolution:
       integrity: sha512-OwijhaRSgqvhm/0ZdAcXNZt9lYdKFpcRDT5ULUuYXPoT794UNOdU+gpT6Rzo7b4V2HUl/op6GqY894AZwv9faQ==
-  /is-what/3.11.2:
-    dev: false
-    resolution:
-      integrity: sha512-m7LzBsC9TqUhkBrozSmmWfVO7VYnjk9UHu0U+Y8BiJRnc1TYIK/3Qv4DteuiBpn2S4K7n3N4WNC4pe6wEx2xYg==
   /isexe/2.0.0:
     dev: true
     resolution:
@@ -1561,10 +1558,6 @@ packages:
       node: '>=8.10.0'
     resolution:
       integrity: sha512-cMhu7c/8rdhkHXWsY+osBhfSy0JikwpHK/5+imo+LpeasTF8ouErHrlYkwT0++njiyuDvc7OFY5T3ukvZ8qmFQ==
-  /reflect-metadata/0.1.13:
-    dev: false
-    resolution:
-      integrity: sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==
   /regexpp/3.1.0:
     dev: true
     engines:
@@ -1848,6 +1841,12 @@ packages:
       node: '>=8.0'
     resolution:
       integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==
+  /treeify/1.1.0:
+    dev: false
+    engines:
+      node: '>=0.6'
+    resolution:
+      integrity: sha512-1m4RA7xVAJrSGrrXGs0L3YTwyvBs2S8PbRHaLZAkFw7JR8oIFwYtysxlBZhYIa7xSyiYJKZ3iGrrk55cGA3i9A==
   /ts-essentials/7.0.1_typescript@4.0.5:
     dependencies:
       typescript: 4.0.5
@@ -1856,12 +1855,6 @@ packages:
       typescript: '>=3.7.0'
     resolution:
       integrity: sha512-8lwh3QJtIc1UWhkQtr9XuksXu3O0YQdEE5g79guDfhCaU1FWTDIEDZ1ZSx4HTHUmlJZ8L812j3BZQ4a0aOUkSA==
-  /ts-ioc-container/1.3.11:
-    dependencies:
-      reflect-metadata: 0.1.13
-    dev: false
-    resolution:
-      integrity: sha512-LOdLKyX1VR5r+Av1zEomDeeWlc1bnaDWXGkYzZteurFR5yorGs1oumvT1ETqXCSjg4VPNHNaqPxCC/FI6eglNg==
   /ts-log/2.2.3:
     dev: false
     resolution:
@@ -1954,11 +1947,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-B0yRTzYdUCCn9n+F4+Gh4yIDtMQcaJsmYBDsTSG8g/OejKBodLQ2IHfN3bM7jUsRXndopT7OIXWdYqc1fjmV6g==
-  /uuid/8.3.1:
-    dev: false
-    hasBin: true
-    resolution:
-      integrity: sha512-FOmRr+FmWEIG8uhZv6C2bTgEVXsHk08kE7mPlrBbEe+c3r9pjceVPgupIfNIhc4yx55H69OXANrUaSuu9eInKg==
   /v8-compile-cache/2.1.1:
     dev: true
     resolution:
@@ -2032,12 +2020,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-r9S/ZyXu/Xu9q1tYlpsLIsa3EeLXXk0VwlxqTcFRfg9EhMW+17kbt9G0NrgCmhGb5vT2hyhJZLfDGx+7+5Uj/w==
-  /yaml/1.10.0:
-    dev: false
-    engines:
-      node: '>= 6'
-    resolution:
-      integrity: sha512-yr2icI4glYaNG+KWONODapy2/jDdMSDnrONSjblABjD9B4Z5LgiircSt8m8sRZFNi08kG9Sm0uSHtEmP3zaEGg==
   /yargs-parser/13.1.2:
     dependencies:
       camelcase: 5.3.1
@@ -2081,6 +2063,7 @@ specifiers:
   '@types/chai': ^4.2.14
   '@types/mocha': ^8.0.3
   '@types/node': ^14.14.6
+  '@types/treeify': ^1.0.0
   '@typescript-eslint/eslint-plugin': ^4.6.0
   '@typescript-eslint/parser': ^4.6.0
   chai: ^4.2.0
@@ -2088,16 +2071,12 @@ specifiers:
   eslint: ^7.12.1
   eslint-config-prettier: ^6.15.0
   eslint-plugin-prettier: ^3.1.4
-  is-what: ^3.11.2
   mocha: ^8.2.0
   npm-run-all: ^4.1.5
   prettier: ^2.1.2
-  reflect-metadata: ^0.1.13
   rotating-file-stream: ^2.1.3
+  treeify: 1.1.0
   ts-essentials: ^7.0.1
-  ts-ioc-container: ^1.3.11
   ts-log: ^2.2.3
   ts-mocha: ^8.0.0
   typescript: ^4.0.5
-  uuid: ^8.3.1
-  yaml: ^1.10.0

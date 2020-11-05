@@ -2,7 +2,7 @@
 
 ## The Core of The Toes
 
-This is our core typescript package for throw-out-error that currently includes a logger and some miscellanous utilities.
+This is our core typescript package for throw-out-error that currently includes a logger and some miscellanous utilities. This was rewritten from our old package, `@throw-out-error/throw-out-utils`.
 
 ## WIP
 
