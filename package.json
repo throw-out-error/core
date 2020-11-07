@@ -4,7 +4,8 @@
     "version": "0.0.1-dev",
     "description": "The core of the toes",
     "scripts": {
-        "prepublishOnly": "ultra -r lint && ultra -r build"
+        "prepublishOnly": "ultra -r lint && pnpm run build",
+        "build": "ultra -r build"
     },
     "repository": {
         "type": "git",
@@ -29,22 +30,6 @@
         "access": "public"
     },
     "devDependencies": {
-        "@types/chai": "^4.2.14",
-        "@types/mocha": "^8.0.3",
-        "@types/node": "^14.14.6",
-        "@types/uuid": "^8.3.0",
-        "@typescript-eslint/eslint-plugin": "^4.6.0",
-        "@typescript-eslint/parser": "^4.6.0",
-        "chai": "^4.2.0",
-        "eslint": "^7.12.1",
-        "eslint-config-prettier": "^6.15.0",
-        "eslint-plugin-prettier": "^3.1.4",
-        "mocha": "^8.2.0",
-        "npm-run-all": "^4.1.5",
-        "prettier": "^2.1.2",
-        "ts-essentials": "^7.0.1",
-        "ts-mocha": "^8.0.0",
-        "typescript": "^4.0.5",
         "ultra-runner": "^3.5.0"
     }
 }
