@@ -50,7 +50,7 @@ export class TypedAxiosInstance<
         method: M,
         url: Path | string,
         config?: TypedAxiosRequestConfig<API, Path, M>,
-        data?: API[Path]["POST"]["body"]
+        data?: API[Path][M]["body"]
     ): Promise<TypedAxiosResponse<API, Path, M>> {
         switch (method.toLowerCase()) {
             case "delete":
@@ -84,7 +84,7 @@ export class TypedAxiosInstance<
     get<Path extends keyof API>(
         url: Path,
         config?: TypedAxiosRequestConfig<API, Path, "GET">
-    ): Promise<TypedAxiosResponse<API, Path, "GET">> {
+    ) {
         return this.makeRequest<Path, "GET">("GET", url, config);
     }
 
@@ -95,14 +95,14 @@ export class TypedAxiosInstance<
         return this.makeRequest<Path, "DELETE">("DELETE", url, config);
     }
 
-    head<Path extends Extract<keyof API, AcceptedMethods>>(
+    head<Path extends keyof API>(
         url: Path | string,
         config?: TypedAxiosRequestConfig<API, Path, "HEAD">
     ): Promise<TypedAxiosResponse<API, Path, "HEAD">> {
         return this.makeRequest<Path, "HEAD">("HEAD", url, config);
     }
 
-    post<Path extends Extract<keyof API, AcceptedMethods>>(
+    post<Path extends keyof API>(
         url: Path | string,
         data?: API[Path]["POST"]["body"],
         config?: TypedAxiosRequestConfig<API, Path, "POST">
@@ -110,7 +110,7 @@ export class TypedAxiosInstance<
         return this.makeRequest<Path, "POST">("POST", url, config, data);
     }
 
-    put<Path extends Extract<keyof API, AcceptedMethods>>(
+    put<Path extends keyof API>(
         url: Path | string,
         data?: API[Path]["PUT"]["body"],
         config?: TypedAxiosRequestConfig<API, Path, "PUT">
@@ -118,7 +118,7 @@ export class TypedAxiosInstance<
         return this.makeRequest<Path, "PUT">("PUT", url, config, data);
     }
 
-    patch<Path extends Extract<keyof API, AcceptedMethods>>(
+    patch<Path extends keyof API>(
         url: Path | string,
         data?: API[Path]["PATCH"]["body"],
         config?: TypedAxiosRequestConfig<API, Path, "PATCH">
