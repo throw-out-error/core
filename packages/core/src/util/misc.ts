@@ -14,6 +14,24 @@ export const treeify = (
     return asTree(JSON.parse(JSON.stringify(data)), showValues, hideFunctions);
 };
 
+const getCircularReplacer = () => {
+    const seen = new WeakSet();
+    return (_: string, value: unknown) => {
+        if (typeof value === "object" && value !== null) {
+            if (seen.has(value)) return;
+
+            seen.add(value);
+        }
+        return value;
+    };
+};
+
+/**
+ * JSON.stringify() without circular references
+ */
+export const stringify = (data: unknown) =>
+    JSON.stringify(data, getCircularReplacer());
+
 export const getAt = (
     obj: unknown,
     path: string,

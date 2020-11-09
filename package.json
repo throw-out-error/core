@@ -4,7 +4,9 @@
     "version": "0.0.1-dev",
     "description": "The core of the toes",
     "scripts": {
-        "prepublishOnly": "ultra -r lint && pnpm run build",
+        "prepublishOnly": "pnpm run lint && pnpm run test && pnpm run build",
+        "lint": "ultra -r lint",
+        "test": "ultra -r test",
         "build": "ultra -r build"
     },
     "repository": {

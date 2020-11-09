@@ -1,9 +1,6 @@
-import axios, {
-    AxiosInstance,
-    AxiosRequestConfig,
-    AxiosResponse,
-    // Method as AcceptedMethods
-} from "axios";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import axios from "axios-observable";
 import {
     AcceptedMethods,
     TypedRestBase,
@@ -40,9 +37,9 @@ export interface TypedAxiosResponse<
 export class TypedAxiosInstance<
     API extends TypedRestIndexedBase = TypedRestIndexedBase
 > {
-    client: AxiosInstance;
+    client: axios;
 
-    constructor(client?: AxiosInstance) {
+    constructor(client?: axios) {
         this.client = client ?? axios.create({});
     }
 
@@ -51,54 +48,60 @@ export class TypedAxiosInstance<
         url: Path | string,
         config?: TypedAxiosRequestConfig<API, Path, M>,
         data?: API[Path][M]["body"]
-    ): Promise<TypedAxiosResponse<API, Path, M>> {
+    ): Observable<TypedAxiosResponse<API, Path, M>> {
         switch (method.toLowerCase()) {
             case "delete":
-                return this.client.delete(url as string, config as unknown);
+                return this.client
+                    .delete(url as string, config as unknown)
+                    .pipe(map((r) => r as TypedAxiosResponse<API, Path, M>));
             case "get":
-                return this.client.get(url as string, config as unknown);
+                return this.client
+                    .get(url as string, config as unknown)
+                    .pipe(map((r) => r as TypedAxiosResponse<API, Path, M>));
             case "head":
-                return this.client.head(url as string, config as unknown);
+                return this.client
+                    .head(url as string, config as unknown)
+                    .pipe(map((r) => r as TypedAxiosResponse<API, Path, M>));
             case "post":
-                return this.client.post(url as string, config as unknown, data);
+                return this.client
+                    .post(url as string, config as unknown, data)
+                    .pipe(map((r) => r as TypedAxiosResponse<API, Path, M>));
             case "put":
-                return this.client.put(url as string, config as unknown, data);
+                return this.client
+                    .put(url as string, config as unknown, data)
+                    .pipe(map((r) => r as TypedAxiosResponse<API, Path, M>));
             case "patch":
-                return this.client.patch(
-                    url as string,
-                    config as unknown,
-                    data
-                );
+                return this.client
+                    .patch(url as string, config as unknown, data)
+                    .pipe(map((r) => r as TypedAxiosResponse<API, Path, M>));
         }
     }
 
     request<
         Path extends Extract<keyof API, AcceptedMethods>,
         Method extends keyof API[Path] = "GET"
-    >(
-        config: TypedAxiosRequestConfig<API, Path, Method>
-    ): Promise<TypedAxiosResponse<API, Path, Method>> {
+    >(config: TypedAxiosRequestConfig<API, Path, Method>) {
         return this.client.request(config);
     }
 
     get<Path extends keyof API>(
-        url: Path,
+        url: Path | string,
         config?: TypedAxiosRequestConfig<API, Path, "GET">
     ) {
         return this.makeRequest<Path, "GET">("GET", url, config);
     }
 
     delete<Path extends keyof API>(
-        url: Path,
+        url: Path | string,
         config?: TypedAxiosRequestConfig<API, Path, "DELETE">
-    ): Promise<TypedAxiosResponse<API, Path, "DELETE">> {
+    ) {
         return this.makeRequest<Path, "DELETE">("DELETE", url, config);
     }
 
     head<Path extends keyof API>(
         url: Path | string,
         config?: TypedAxiosRequestConfig<API, Path, "HEAD">
-    ): Promise<TypedAxiosResponse<API, Path, "HEAD">> {
+    ) {
         return this.makeRequest<Path, "HEAD">("HEAD", url, config);
     }
 
@@ -106,7 +109,7 @@ export class TypedAxiosInstance<
         url: Path | string,
         data?: API[Path]["POST"]["body"],
         config?: TypedAxiosRequestConfig<API, Path, "POST">
-    ): Promise<TypedAxiosResponse<API, Path, "POST">> {
+    ) {
         return this.makeRequest<Path, "POST">("POST", url, config, data);
     }
 
@@ -114,7 +117,7 @@ export class TypedAxiosInstance<
         url: Path | string,
         data?: API[Path]["PUT"]["body"],
         config?: TypedAxiosRequestConfig<API, Path, "PUT">
-    ): Promise<TypedAxiosResponse<API, Path, "PUT">> {
+    ) {
         return this.makeRequest<Path, "PUT">("PUT", url, config, data);
     }
 
@@ -122,7 +125,7 @@ export class TypedAxiosInstance<
         url: Path | string,
         data?: API[Path]["PATCH"]["body"],
         config?: TypedAxiosRequestConfig<API, Path, "PATCH">
-    ): Promise<TypedAxiosResponse<API, Path, "PATCH">> {
+    ) {
         return this.makeRequest<Path, "PATCH">("PATCH", url, config, data);
     }
 }
