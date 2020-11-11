@@ -7,7 +7,9 @@
         "prepublishOnly": "pnpm run lint && pnpm run test && pnpm run build",
         "lint": "ultra -r lint",
         "test": "ultra -r test",
-        "build": "ultra -r build"
+        "build": "ultra -r build",
+        "publish:all": "pnpm publish --no-git-checks -r",
+        "publish:dev": "pnpm publish --no-git-checks -r --tag dev"
     },
     "repository": {
         "type": "git",
