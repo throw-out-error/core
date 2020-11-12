@@ -157,6 +157,21 @@ export class Tensor<
         return new Tensor(s.split(",").map((sv) => parseFloat(sv)));
     }
 
+    public static fromDirection(d: Direction): Tensor<Vector> {
+        switch (d) {
+            case Direction.NORTH:
+                return Tensor.from(0, 1);
+            case Direction.SOUTH:
+                return Tensor.from(0, -1);
+            case Direction.EAST:
+                return Tensor.from(1, 0);
+            case Direction.WEST:
+                return Tensor.from(-1, 0);
+            default:
+                return null;
+        }
+    }
+
     public toArrayString(): string {
         return treeify(this.toArray());
     }

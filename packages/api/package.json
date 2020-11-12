@@ -1,6 +1,6 @@
 {
     "name": "@toes/api",
-    "private": false,
+    "private": true,
     "version": "0.0.2",
     "description": "Typed apis",
     "main": "dist/index.js",
