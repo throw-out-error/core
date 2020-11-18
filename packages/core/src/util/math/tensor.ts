@@ -80,8 +80,15 @@ export class Tensor<
      * @description Initializes an empty tensor with the specified size. All values in the data array will be 0.
      */
     static zeros<S extends number[]>(size: S): Tensor<S> {
+        return this.fill(size, 0);
+    }
+
+    /**
+     * @description Initializes a tensor with the specified "size". All values in the data array will equal the specified fill amount.
+     */
+    static fill<S extends number[]>(size: S, fillAmount: number): Tensor<S> {
         return new Tensor<S>(
-            new Array(size.reduce((s, l) => s * l, 1)).fill(0),
+            new Array(size.reduce((s, l) => s * l, 1)).fill(fillAmount),
             size
         );
     }
