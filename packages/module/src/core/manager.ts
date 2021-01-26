@@ -35,12 +35,18 @@ export class ModuleManager {
 
         this.modules.push(module);
     }
+
+    public addAll(...modules: AbstractModule[]) {
+        modules.forEach((m) => this.add(m));
+    }
+
     public async registerModules() {
         for await (const module of this.modules) {
             // TODO: Improve OR Gate
             if (this.configuration.isTest()) {
                 if (module.registerOnTest) await module.register();
             } else await module.register();
+            module.setState({ enabled: true });
         }
         return this;
     }

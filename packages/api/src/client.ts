@@ -1,51 +1,45 @@
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import axios from "axios-observable";
-import {
-    AcceptedMethods,
-    TypedRestBase,
-    TypedRestIndexedBase,
-    TypedRestRoute,
-} from "./base";
+import axios, { Axios } from "axios-observable";
+import { AxiosRequestConfig } from "axios";
+import { AcceptedMethods, TypedRestIndexedBase, TypedRestRoute } from "./base";
 
 export interface TypedAxiosRequestConfig<
-    API extends TypedRestBase,
+    API extends TypedRestIndexedBase,
     Path extends keyof API,
     Method extends keyof API[Path],
     RouteDef extends TypedRestRoute = API[Path][Method]
-> {
-    url?: Path;
+> extends AxiosRequestConfig {
+    url?: Extract<Path, string>;
     method?: Extract<Method, AcceptedMethods>;
     params?: RouteDef["query"];
     data?: RouteDef["body"];
 }
 
 export interface TypedAxiosResponse<
-    API extends TypedRestBase,
+    API extends TypedRestIndexedBase,
     Path extends keyof API,
     Method extends keyof API[Path],
-    RouteDef extends TypedRestRoute = API[Path][Method]
+    RouteDef extends API[Path][Method] & TypedRestRoute = API[Path][Method]
 > {
     config: TypedAxiosRequestConfig<API, Path, Method>;
     data: RouteDef["response"];
     status: number;
     statusText: string;
-    headers: any;
-    request?: any;
+    headers: unknown;
+    request?: unknown;
 }
 
-export class TypedAxiosInstance<
-    API extends TypedRestIndexedBase = TypedRestIndexedBase
-> {
-    client: axios;
+export class TypedAxiosInstance<API extends TypedRestIndexedBase> {
+    client: Axios;
 
-    constructor(client?: axios) {
+    constructor(client?: Axios) {
         this.client = client ?? axios.create({});
     }
 
     makeRequest<Path extends keyof API, M extends AcceptedMethods>(
         method: M,
-        url: Path | string,
+        url: Path,
         config?: TypedAxiosRequestConfig<API, Path, M>,
         data?: API[Path][M]["body"]
     ): Observable<TypedAxiosResponse<API, Path, M>> {
@@ -85,28 +79,28 @@ export class TypedAxiosInstance<
     }
 
     get<Path extends keyof API>(
-        url: Path | string,
+        url: Path,
         config?: TypedAxiosRequestConfig<API, Path, "GET">
     ) {
         return this.makeRequest<Path, "GET">("GET", url, config);
     }
 
     delete<Path extends keyof API>(
-        url: Path | string,
+        url: Path,
         config?: TypedAxiosRequestConfig<API, Path, "DELETE">
     ) {
         return this.makeRequest<Path, "DELETE">("DELETE", url, config);
     }
 
     head<Path extends keyof API>(
-        url: Path | string,
+        url: Path,
         config?: TypedAxiosRequestConfig<API, Path, "HEAD">
     ) {
         return this.makeRequest<Path, "HEAD">("HEAD", url, config);
     }
 
     post<Path extends keyof API>(
-        url: Path | string,
+        url: Path,
         data?: API[Path]["POST"]["body"],
         config?: TypedAxiosRequestConfig<API, Path, "POST">
     ) {
@@ -114,7 +108,7 @@ export class TypedAxiosInstance<
     }
 
     put<Path extends keyof API>(
-        url: Path | string,
+        url: Path,
         data?: API[Path]["PUT"]["body"],
         config?: TypedAxiosRequestConfig<API, Path, "PUT">
     ) {
@@ -122,7 +116,7 @@ export class TypedAxiosInstance<
     }
 
     patch<Path extends keyof API>(
-        url: Path | string,
+        url: Path,
         data?: API[Path]["PATCH"]["body"],
         config?: TypedAxiosRequestConfig<API, Path, "PATCH">
     ) {

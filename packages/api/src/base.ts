@@ -1,6 +1,5 @@
-export interface TypedRestBase {
-    [route: string]: unknown;
-}
+export interface TypedRestBase
+    extends Record<string, Partial<Record<AcceptedMethods, TypedRestRoute>>> {}
 
 export interface TypedRestRoute<
     B = unknown,
@@ -11,7 +10,7 @@ export interface TypedRestRoute<
     params?: P;
     query?: Q;
     body?: B;
-    response?: R;
+    response: R;
 }
 
 export type AcceptedMethods =
@@ -42,8 +41,13 @@ export type AcceptedMethods =
  * not cause errors when an invalid route is defined or called
  */
 
-export type TypedRestIndexedBase<T = Record<string, unknown>> = {
-    [K in keyof T]: Partial<Record<AcceptedMethods, TypedRestRoute>>;
+export type TypedRestIndexedBase<
+    T extends Record<
+        string,
+        Partial<Record<AcceptedMethods, TypedRestRoute>>
+    > = Record<string, Partial<Record<AcceptedMethods, TypedRestRoute>>>
+> = {
+    [K in keyof T]?: { [M in AcceptedMethods]?: T[K][M] };
 };
 
 /*
