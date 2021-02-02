@@ -1,5 +1,7 @@
-export interface TypedRestBase
-    extends Record<string, Partial<Record<AcceptedMethods, TypedRestRoute>>> {}
+export type TypedRestBase = Record<
+    string,
+    Partial<Record<AcceptedMethods, TypedRestRoute>>
+>;
 
 export interface TypedRestRoute<
     B = unknown,

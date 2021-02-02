@@ -9,7 +9,7 @@
         "test": "ultra -r test",
         "build": "ultra -r build",
         "publish:all": "pnpm publish --no-git-checks -r",
-        "publish:dev": "pnpm publish --no-git-checks -r --tag dev"
+        "publish:dev": "pnpm publish --no-git-checks -r --tag dev --registry http://npm.firenodes.com/"
     },
     "repository": {
         "type": "git",
