@@ -6,7 +6,6 @@ export interface IModuleState {
 }
 
 export abstract class AbstractModule<S extends IModuleState = IModuleState> {
-    abstract name: string;
     abstract registerOnTest: boolean;
     abstract parentModule?: string;
     protected enabled = false;

@@ -35,8 +35,9 @@
         "access": "public"
     },
     "dependencies": {
+        "@corex/deepmerge": "2.5.3",
         "fast-glob": "^3.2.5",
-        "@corex/deepmerge": "2.5.3"
+        "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {
         "@types/chai": "^4.2.14",

@@ -1,4 +1,9 @@
 import { AbstractModule } from "./abstract";
+import "reflect-metadata";
+
+export interface Constructor<T> {
+    new (...args: unknown[]): T;
+}
 
 export interface IModuleConfiguration {
     isTest(): boolean;
@@ -12,36 +17,36 @@ export const defaultConfig: IModuleConfiguration = {
 
 export class ModuleManager {
     constructor(
-        protected modules: Array<AbstractModule>,
+        public readonly modules: Map<string, AbstractModule> = new Map(),
         protected configuration: IModuleConfiguration = defaultConfig
     ) {
         this.modules = modules;
     }
 
-    public getModuleList(): Array<AbstractModule> {
-        return [...this.modules];
+    protected resolveTarget<T>(target: Constructor<T>): T {
+        const tokens = Reflect.getMetadata("design:paramtypes", target) || [];
+        const injections = tokens.map((token: never) => this.resolve(token));
+        return new target(...injections);
     }
 
-    public find<T extends AbstractModule>(name: string): T | null {
-        return (this.modules.find((m) => m.name === name) || null) as T;
-    }
-    /**
-     * Adds the given module to the modules list
+    /*
      * @param module The module to add
      */
-    public add(module: AbstractModule) {
-        if (!!this.find(module.name))
-            throw new Error(`Module '${module.name}' is already registered.`);
+    public resolve<T extends AbstractModule>(target: Constructor<T>) {
+        if (this.modules && this.modules.has(target.name))
+            return this.modules.get(target.name);
 
-        this.modules.push(module);
-    }
+        const tokens = Reflect.getMetadata("design:paramtypes", target) || [];
+        const injections = tokens.map((token: never) =>
+            this.resolveTarget<T>(token)
+        );
 
-    public addAll(...modules: AbstractModule[]) {
-        modules.forEach((m) => this.add(m));
+        this.modules.set(target.name, new target(...injections));
+        return this.modules.get(target.name);
     }
 
     public async registerModules() {
-        for await (const module of this.modules) {
+        for await (const module of this.modules.values()) {
             // TODO: Improve OR Gate
             if (this.configuration.isTest()) {
                 if (module.registerOnTest) await module.register();
