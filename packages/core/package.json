@@ -13,7 +13,7 @@
         "build": "tsc",
         "watch": "tsc --watch",
         "lint": "eslint --fix --quiet src/**/*",
-        "prepare": "npm run build",
+        "postinstall": "npm run build",
         "test": "ts-mocha src/**/*.test.ts"
     },
     "engines": {
