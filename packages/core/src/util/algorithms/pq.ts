@@ -7,7 +7,7 @@ export interface Options<T> {
 
 export class PriorityQueue<T> implements Iterable<T> {
     private _length = 0;
-    private DEFAULT_COMPARATOR(a: never, b: never) {
+    private DEFAULT_COMPARATOR(a: number, b: number) {
         return a - b;
     }
 
@@ -30,7 +30,9 @@ export class PriorityQueue<T> implements Iterable<T> {
 
     constructor(options?: Options<T>) {
         if (!options) options = {};
-        this.comparator = options.comparator || this.DEFAULT_COMPARATOR;
+        this.comparator =
+            options.comparator ||
+            ((this.DEFAULT_COMPARATOR as unknown) as Comparator<T>);
         this._length = options.initialValues ? options.initialValues.length : 0;
         this.data = options.initialValues ? options.initialValues.slice(0) : [];
         this._heapify();
