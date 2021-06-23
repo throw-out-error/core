@@ -1,5 +1,6 @@
 import { Direction } from "./direction";
 import { chunk, treeify } from "../misc";
+import { NDArray, NDVArray } from "../types";
 
 export type Scalar = [];
 export type Vector<T extends number = 3> = [T];
@@ -43,8 +44,6 @@ export type TypedArray =
     | Uint8Array
     | Uint16Array
     | Uint32Array;
-
-type NDArray = number | ArrayLike<number> | ArrayLike<NDArray>;
 
 export class Tensor<
     S extends number[] = number[],
@@ -97,7 +96,7 @@ export class Tensor<
     size: S;
 
     constructor(
-        data: NDArray,
+        data: NDVArray,
         size?: S,
         type: {
             from(array: ArrayLike<number>): T;
@@ -164,7 +163,7 @@ export class Tensor<
         return new Tensor(s.split(",").map((sv) => parseFloat(sv)));
     }
 
-    public static fromDirection(d: Direction): Tensor<Vector> {
+    public static fromDirection(d: Direction): Tensor<Vector> | undefined {
         switch (d) {
             case Direction.NORTH:
                 return Tensor.from(0, 1);
@@ -175,7 +174,7 @@ export class Tensor<
             case Direction.WEST:
                 return Tensor.from(-1, 0);
             default:
-                return null;
+                return undefined;
         }
     }
 
@@ -200,7 +199,7 @@ export class Tensor<
      */
     public toArray(): NDArray {
         const size = this.size;
-        const go = (a: NDArray) => {
+        const go = (a: unknown) => {
             const s = size.pop();
             const result = chunk(a as number[], s as number);
             size.push(s as number);

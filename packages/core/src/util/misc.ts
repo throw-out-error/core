@@ -1,4 +1,5 @@
 import { asTree } from "treeify";
+import { NDArray } from "./types";
 
 export const asyncTimeout = (ms: number): Promise<void> => {
     return new Promise((resolve) => {
@@ -42,8 +43,10 @@ export const getAt = (
             .split(regexp)
             .filter(Boolean)
             .reduce(
-                (res: Record<string, unknown>, key: string) =>
-                    res !== null && res !== undefined ? res[key] : res,
+                (res: unknown, key: string) =>
+                    res !== null && res !== undefined
+                        ? (res as Record<string, unknown>)[key]
+                        : res,
                 obj
             );
     const result = travel(/[,[\]]+?/) || travel(/[,[\].]+?/);
@@ -64,7 +67,7 @@ export const cap = ([first, ...rest], lowerRest = false): string =>
  * @description Chunks an array into smaller arrays of a specified size.
  * @param a The array or string to split up into chunks.
  */
-export const chunk = (a: unknown[] | string, b: number): unknown[] =>
+export const chunk = <T = number>(a: T[], b: number): NDArray<T> =>
     Array.from({ length: Math.ceil(a.length / b) }, (_, r) =>
         a.slice(r * b, r * b + b)
     );
